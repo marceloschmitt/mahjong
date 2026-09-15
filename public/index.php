@@ -24,7 +24,7 @@ $router->get('/login', function (): void {
 });
 
 $router->post('/login', function (): void {
-//    guestOnly();
+    guestOnly();
     verifyCsrf();
 
     $email = request('email');
