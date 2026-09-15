@@ -1,7 +1,5 @@
 <section class="page-head">
-    <p class="eyebrow">Agenda</p>
-    <h1>Eventos</h1>
-    <p class="lede">Encontros, torneios e demais atividades do clube aparecerão nesta lista.</p>
+    <h1>Gerenciamento de Eventos</h1>
 </section>
 
 <div class="empty">

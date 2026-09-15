@@ -89,11 +89,22 @@ $router->post('/logout', function (): void {
     redirect('/login');
 });
 
+$placeholder = static function (string $path, string $title, string $lede): void {
+    $user = requireAuth();
+    view('coming-soon', [
+        'title' => $title,
+        'heading' => $title,
+        'lede' => $lede,
+        'user' => $user,
+        'currentPath' => $path,
+    ]);
+};
+
 $router->get('/', function (): void {
     $user = requireAuth();
     $pdo = db();
     view('dashboard', [
-        'title' => 'Painel',
+        'title' => 'Dashboard',
         'user' => $user,
         'currentPath' => '/',
         'stats' => [
@@ -105,13 +116,8 @@ $router->get('/', function (): void {
     ]);
 });
 
-$router->get('/membros', function (): void {
-    $user = requireAuth();
-    view('members/index', [
-        'title' => 'Membros',
-        'user' => $user,
-        'currentPath' => '/membros',
-    ]);
+$router->get('/torneios', function () use ($placeholder): void {
+    $placeholder('/torneios', 'Torneios', 'Competições oficiais do clube aparecerão aqui.');
 });
 
 $router->get('/eventos', function (): void {
@@ -123,22 +129,62 @@ $router->get('/eventos', function (): void {
     ]);
 });
 
-$router->get('/amistosos', function (): void {
+$router->get('/partidas', function (): void {
     $user = requireAuth();
     view('matches/index', [
-        'title' => 'Amistosos',
+        'title' => 'Partidas',
         'user' => $user,
-        'currentPath' => '/amistosos',
+        'currentPath' => '/partidas',
     ]);
 });
 
-$router->get('/progresso', function (): void {
+$router->get('/participantes', function (): void {
+    $user = requireAuth();
+    view('members/index', [
+        'title' => 'Participantes',
+        'user' => $user,
+        'currentPath' => '/participantes',
+    ]);
+});
+
+$router->get('/rankings', function (): void {
     $user = requireAuth();
     view('progress/index', [
-        'title' => 'Progresso',
+        'title' => 'Rankings',
         'user' => $user,
-        'currentPath' => '/progresso',
+        'currentPath' => '/rankings',
     ]);
+});
+
+$router->get('/noticias', function () use ($placeholder): void {
+    $placeholder('/noticias', 'Notícias', 'Avisos e comunicados do clube ficarão neste espaço.');
+});
+
+$router->get('/usuarios', function () use ($placeholder): void {
+    $placeholder('/usuarios', 'Usuários', 'Gestão de contas e papéis de acesso.');
+});
+
+$router->get('/configuracoes', function () use ($placeholder): void {
+    $placeholder('/configuracoes', 'Configurações', 'Preferências do clube e do sistema.');
+});
+
+$router->get('/app', function () use ($placeholder): void {
+    $placeholder('/app', 'Área do app', 'A área pública do aplicativo ainda será construída.');
+});
+
+$router->get('/membros', function (): void {
+    requireAuth();
+    redirect('/participantes');
+});
+
+$router->get('/amistosos', function (): void {
+    requireAuth();
+    redirect('/partidas');
+});
+
+$router->get('/progresso', function (): void {
+    requireAuth();
+    redirect('/rankings');
 });
 
 $router->dispatch($_SERVER['REQUEST_METHOD'] ?? 'GET', $_SERVER['REQUEST_URI'] ?? '/');

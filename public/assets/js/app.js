@@ -1,15 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
     const toggle = document.querySelector('.nav-toggle');
-    const nav = document.querySelector('.nav');
-    const session = document.querySelector('.session');
+    const backdrop = document.querySelector('.sidebar-backdrop');
 
-    if (toggle && nav) {
-        toggle.addEventListener('click', () => {
-            const open = nav.classList.toggle('is-open');
-            session?.classList.toggle('is-open', open);
-            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-        });
-    }
+    const setOpen = (open) => {
+        document.body.classList.toggle('sidebar-open', open);
+        toggle?.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+
+    toggle?.addEventListener('click', () => {
+        setOpen(!document.body.classList.contains('sidebar-open'));
+    });
+
+    backdrop?.addEventListener('click', () => setOpen(false));
 
     document.querySelectorAll('form.form').forEach((form) => {
         form.addEventListener('submit', () => {
@@ -20,8 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const flash = document.querySelector('.flash');
     if (flash) {
         window.setTimeout(() => {
-            flash.style.transition = 'opacity 240ms ease';
-            flash.style.opacity = '0';
+            flash.classList.add('is-hiding');
         }, 4200);
     }
 });

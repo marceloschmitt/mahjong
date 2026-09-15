@@ -3,34 +3,33 @@
 /** @var array{members:int,events:int,matches:int,progress:int} $stats */
 ?>
 <section class="page-head">
-    <p class="eyebrow">Painel</p>
-    <h1>Olá, <?= e(explode(' ', $user['name'])[0]) ?></h1>
-    <p class="lede">Este é o ponto de partida da gestão do clube. Os módulos abaixo ainda vão ganhar regras e fluxos.</p>
+    <h1>Dashboard</h1>
+    <p class="lede">Olá, <?= e(explode(' ', $user['name'])[0]) ?>. Este é o ponto de partida da gestão do clube.</p>
 </section>
 
 <div class="cards">
-    <a class="card" href="/membros">
-        <span class="card-kicker">Pessoas</span>
-        <strong><?= (int) $stats['members'] ?></strong>
-        <h2>Membros</h2>
-        <p>Cadastro e acompanhamento de quem faz parte do clube.</p>
-    </a>
     <a class="card" href="/eventos">
         <span class="card-kicker">Agenda</span>
         <strong><?= (int) $stats['events'] ?></strong>
         <h2>Eventos</h2>
-        <p>Torneios, encontros e demais atividades oficiais.</p>
+        <p>Encontros, workshops e demais atividades do clube.</p>
     </a>
-    <a class="card" href="/amistosos">
+    <a class="card" href="/partidas">
         <span class="card-kicker">Mesas</span>
         <strong><?= (int) $stats['matches'] ?></strong>
-        <h2>Amistosos</h2>
-        <p>Partidas avulsas, com ou sem vínculo a um evento.</p>
+        <h2>Partidas</h2>
+        <p>Resultados de mesas, com ou sem vínculo a um evento.</p>
     </a>
-    <a class="card" href="/progresso">
+    <a class="card" href="/participantes">
+        <span class="card-kicker">Pessoas</span>
+        <strong><?= (int) $stats['members'] ?></strong>
+        <h2>Participantes</h2>
+        <p>Quem faz parte do clube e das atividades.</p>
+    </a>
+    <a class="card" href="/rankings">
         <span class="card-kicker">Acompanhamento</span>
         <strong><?= (int) $stats['progress'] ?></strong>
-        <h2>Progresso</h2>
-        <p>Notas e histórico de evolução de cada jogador.</p>
+        <h2>Rankings</h2>
+        <p>Evolução e classificação dos jogadores.</p>
     </a>
 </div>
