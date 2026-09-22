@@ -7,7 +7,15 @@ final class User
     public static function findActiveById(int $id): ?array
     {
         $stmt = db()->prepare(
-            'SELECT id, name, email, role, active FROM users WHERE id = :id AND active = 1 LIMIT 1'
+            'SELECT u.id,
+                    u.nome AS name,
+                    u.email,
+                    u.ativo AS active,
+                    CASE WHEN a.usuario_id IS NOT NULL THEN \'admin\' ELSE \'member\' END AS role
+             FROM usuarios u
+             LEFT JOIN admins a ON a.usuario_id = u.id
+             WHERE u.id = :id AND u.ativo = 1
+             LIMIT 1'
         );
         $stmt->execute(['id' => $id]);
         $user = $stmt->fetch();
@@ -18,7 +26,10 @@ final class User
     public static function findByEmail(string $email): ?array
     {
         $stmt = db()->prepare(
-            'SELECT id, password_hash, active FROM users WHERE email = :email LIMIT 1'
+            'SELECT id, senha_hash AS password_hash, ativo AS active
+             FROM usuarios
+             WHERE email = :email
+             LIMIT 1'
         );
         $stmt->execute(['email' => $email]);
         $user = $stmt->fetch();
@@ -28,7 +39,7 @@ final class User
 
     public static function emailExists(string $email): bool
     {
-        $stmt = db()->prepare('SELECT id FROM users WHERE email = :email LIMIT 1');
+        $stmt = db()->prepare('SELECT id FROM usuarios WHERE email = :email LIMIT 1');
         $stmt->execute(['email' => $email]);
 
         return (bool) $stmt->fetch();
@@ -36,18 +47,41 @@ final class User
 
     public static function create(string $name, string $email, string $password, string $role = 'member'): int
     {
-        $stmt = db()->prepare(
-            'INSERT INTO users (name, email, password_hash, role, active)
-             VALUES (:name, :email, :password_hash, :role, 1)'
-        );
-        $stmt->execute([
-            'name' => $name,
-            'email' => $email,
-            'password_hash' => password_hash($password, PASSWORD_DEFAULT),
-            'role' => $role,
-        ]);
+        $pdo = db();
+        $pdo->beginTransaction();
 
-        return (int) db()->lastInsertId();
+        try {
+            $stmt = $pdo->prepare(
+                'INSERT INTO usuarios (nome, email, senha_hash, ativo)
+                 VALUES (:nome, :email, :senha_hash, 1)'
+            );
+            $stmt->execute([
+                'nome' => $name,
+                'email' => $email,
+                'senha_hash' => password_hash($password, PASSWORD_DEFAULT),
+            ]);
+
+            $id = (int) $pdo->lastInsertId();
+
+            if ($role === 'admin') {
+                $admin = $pdo->prepare(
+                    'INSERT INTO admins (usuario_id, cargo) VALUES (:id, :cargo)'
+                );
+                $admin->execute(['id' => $id, 'cargo' => 'administrador']);
+            }
+
+            $participante = $pdo->prepare(
+                'INSERT INTO participantes (usuario_id, apelido) VALUES (:id, :apelido)'
+            );
+            $participante->execute(['id' => $id, 'apelido' => $name]);
+
+            $pdo->commit();
+
+            return $id;
+        } catch (Throwable $e) {
+            $pdo->rollBack();
+            throw $e;
+        }
     }
 
     /** @return list<string> */

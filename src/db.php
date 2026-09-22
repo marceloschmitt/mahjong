@@ -29,7 +29,7 @@ function db(): PDO
     $pdo->exec($schemaSql);
     saveSchemaFingerprint($pdo, $fingerprint);
 
-    $count = (int) $pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
+    $count = (int) $pdo->query('SELECT COUNT(*) FROM usuarios')->fetchColumn();
     if ($count === 0) {
         $pdo->exec((string) file_get_contents($config['seed_path']));
     }

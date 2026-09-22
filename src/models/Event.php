@@ -6,6 +6,6 @@ final class Event
 {
     public static function count(): int
     {
-        return (int) db()->query('SELECT COUNT(*) FROM events')->fetchColumn();
+        return (int) db()->query('SELECT COUNT(*) FROM eventos')->fetchColumn();
     }
 }

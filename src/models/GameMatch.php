@@ -6,6 +6,6 @@ final class GameMatch
 {
     public static function count(): int
     {
-        return (int) db()->query('SELECT COUNT(*) FROM matches')->fetchColumn();
+        return (int) db()->query('SELECT COUNT(*) FROM partidas')->fetchColumn();
     }
 }
