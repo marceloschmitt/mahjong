@@ -3,6 +3,7 @@
 /data/*.sqlite-journal
 /data/*.sqlite-wal
 /data/*.sqlite-shm
+/data/*.bak
 
 # Ambiente e segredos
 .env

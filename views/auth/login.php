@@ -9,8 +9,8 @@
     <form method="post" action="/login" class="form" novalidate>
         <?= csrfField() ?>
         <label>
-            E-mail
-            <input type="email" name="email" value="<?= e($email) ?>" autocomplete="email" required>
+            Usuário
+            <input type="text" name="email" value="<?= e($email) ?>" autocomplete="username" required>
         </label>
         <label>
             Senha

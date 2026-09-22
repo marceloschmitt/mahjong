@@ -23,13 +23,7 @@ final class Router
         $handler = $this->routes[$method][$path] ?? null;
 
         if ($handler === null) {
-            http_response_code(404);
-            $user = currentUser();
-            view('errors/404', [
-                'title' => 'Página não encontrada',
-                'user' => $user,
-                'currentPath' => $path,
-            ]);
+            (new ErrorController())->notFound($path);
             return;
         }
 

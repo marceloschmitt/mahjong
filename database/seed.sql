@@ -1,8 +1,8 @@
 INSERT INTO users (name, email, password_hash, role, active)
 VALUES (
     'Administrador',
-    'admin@clube.local',
-    '$2y$10$ClOJqlQkY/qwNV94p1aUYOs8a4lDzAjak3rbDsOSxe9Alr2WLu4Fa',
+    'admin',
+    '$2y$10$B35.L5o26El7Ar/Rt3g7i.yYe8zdatw/KRldXy7JrWrakCjLtDvRq',
     'admin',
     1
 );

@@ -26,8 +26,21 @@ session_set_cookie_params([
 session_start();
 
 require ROOT_PATH . '/src/db.php';
-require ROOT_PATH . '/src/auth.php';
-require ROOT_PATH . '/src/Router.php';
+
+spl_autoload_register(static function (string $class): void {
+    $paths = [
+        ROOT_PATH . '/src/' . $class . '.php',
+        ROOT_PATH . '/src/models/' . $class . '.php',
+        ROOT_PATH . '/src/controllers/' . $class . '.php',
+    ];
+
+    foreach ($paths as $path) {
+        if (is_file($path)) {
+            require $path;
+            return;
+        }
+    }
+});
 
 db();
 
