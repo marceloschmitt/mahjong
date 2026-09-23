@@ -9,6 +9,17 @@ abstract class Controller
         return AuthService::requireUser();
     }
 
+    protected function requireAdmin(): array
+    {
+        $user = $this->requireAuth();
+        if (($user['role'] ?? '') !== 'admin') {
+            flash('error', 'Acesso restrito a administradores.');
+            redirect('/');
+        }
+
+        return $user;
+    }
+
     protected function guestOnly(): void
     {
         AuthService::guestOnly();

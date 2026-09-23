@@ -17,6 +17,7 @@ $events = new EventController();
 $matches = new MatchController();
 $members = new MemberController();
 $rankings = new RankingController();
+$users = new UserController();
 $pages = new PageController();
 
 $router = new Router();
@@ -35,7 +36,7 @@ $router->get('/rankings', [$rankings, 'index']);
 
 $router->get('/torneios', [$pages, 'torneios']);
 $router->get('/noticias', [$pages, 'noticias']);
-$router->get('/usuarios', [$pages, 'usuarios']);
+$router->get('/usuarios', [$users, 'index']);
 $router->get('/configuracoes', [$pages, 'configuracoes']);
 $router->get('/app', [$pages, 'app']);
 

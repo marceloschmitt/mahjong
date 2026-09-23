@@ -23,8 +23,49 @@ final class User
         return $user ?: null;
     }
 
+    /** @return list<array<string, mixed>> */
+    public static function all(): array
+    {
+        $stmt = db()->query(
+            'SELECT u.id,
+                    u.nome AS name,
+                    u.email,
+                    u.ativo AS active,
+                    CASE WHEN a.usuario_id IS NOT NULL THEN \'admin\' ELSE \'member\' END AS role
+             FROM usuarios u
+             LEFT JOIN admins a ON a.usuario_id = u.id
+             ORDER BY u.nome COLLATE NOCASE'
+        );
+
+        return $stmt->fetchAll();
+    }
+
+    public static function findById(int $id): ?array
+    {
+        $stmt = db()->prepare(
+            'SELECT u.id,
+                    u.nome AS name,
+                    u.email,
+                    u.ativo AS active,
+                    CASE WHEN a.usuario_id IS NOT NULL THEN \'admin\' ELSE \'member\' END AS role
+             FROM usuarios u
+             LEFT JOIN admins a ON a.usuario_id = u.id
+             WHERE u.id = :id
+             LIMIT 1'
+        );
+        $stmt->execute(['id' => $id]);
+        $user = $stmt->fetch();
+
+        return $user ?: null;
+    }
+
     public static function findByEmail(string $email): ?array
     {
+        $email = trim($email);
+        if ($email === '') {
+            return null;
+        }
+
         $stmt = db()->prepare(
             'SELECT id, senha_hash AS password_hash, ativo AS active
              FROM usuarios
@@ -35,6 +76,30 @@ final class User
         $user = $stmt->fetch();
 
         return $user ?: null;
+    }
+
+    public static function findByLogin(string $login): ?array
+    {
+        $login = trim($login);
+        if ($login === '') {
+            return null;
+        }
+
+        $byEmail = self::findByEmail($login);
+        if ($byEmail !== null) {
+            return $byEmail;
+        }
+
+        $stmt = db()->prepare(
+            'SELECT id, senha_hash AS password_hash, ativo AS active
+             FROM usuarios
+             WHERE nome = :nome COLLATE NOCASE
+             LIMIT 2'
+        );
+        $stmt->execute(['nome' => $login]);
+        $rows = $stmt->fetchAll();
+
+        return count($rows) === 1 ? $rows[0] : null;
     }
 
     public static function emailExists(string $email): bool

@@ -26,11 +26,6 @@ final class PageController extends Controller
         $this->comingSoon('/noticias', 'Notícias', 'Avisos e comunicados do clube ficarão neste espaço.');
     }
 
-    public function usuarios(): void
-    {
-        $this->comingSoon('/usuarios', 'Usuários', 'Gestão de contas e papéis de acesso.');
-    }
-
     public function configuracoes(): void
     {
         $this->comingSoon('/configuracoes', 'Configurações', 'Preferências do clube e do sistema.');

@@ -9,7 +9,7 @@
     <form method="post" action="/login" class="form" novalidate>
         <?= csrfField() ?>
         <label>
-            Usuário
+            E-mail ou nome
             <input type="text" name="email" value="<?= e($email) ?>" autocomplete="username" required>
         </label>
         <label>

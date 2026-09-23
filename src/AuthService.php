@@ -34,7 +34,7 @@ final class AuthService
 
     public static function attempt(string $email, string $password): bool
     {
-        $user = User::findByEmail($email);
+        $user = User::findByLogin($email);
         if ($user === null || !(int) $user['active'] || !password_verify($password, $user['password_hash'])) {
             return false;
         }
